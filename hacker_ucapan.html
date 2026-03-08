@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hacker Formation</title>
+
+<style>
+body{
+margin:0;
+background:black;
+overflow:hidden;
+font-family:monospace;
+}
+canvas{
+display:block;
+}
+</style>
+
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const message = "SELAMAT MENUNAIKAN IBADAH PUASA";
+
+const fontSize = 16;
+const columns = canvas.width / fontSize;
+
+let rain = [];
+let formation = [];
+
+for(let i=0;i<columns;i++){
+rain[i] = Math.random()*canvas.height;
+}
+
+let startX = canvas.width/2 - (message.length*fontSize)/2;
+
+for(let i=0;i<message.length;i++){
+
+formation.push({
+char: message[i],
+x: startX + i*fontSize,
+y: Math.random()*-500,
+targetY: canvas.height/2,
+locked:false
+})
+
+}
+
+function draw(){
+
+ctx.fillStyle = "rgba(0,0,0,0.1)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle = "#0F0";
+ctx.font = fontSize+"px monospace";
+
+for(let i=0;i<rain.length;i++){
+
+let text = letters[Math.floor(Math.random()*letters.length)];
+
+ctx.fillText(text,i*fontSize,rain[i]);
+
+rain[i]+=fontSize;
+
+if(rain[i] > canvas.height){
+rain[i] = 0;
+}
+
+}
+
+formation.forEach(l=>{
+
+if(!l.locked){
+
+l.y += 2;
+
+if(l.y >= l.targetY){
+l.locked = true;
+}
+
+}
+
+ctx.fillText(l.char,l.x,l.y)
+
+})
+
+requestAnimationFrame(draw)
+
+}
+
+draw()
+
+</script>
+
+</body>
+</html>
